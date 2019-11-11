@@ -1,11 +1,17 @@
-package io.javabrains.movieinfoservice.models;
+package io.javabrains.moviecatalogservice.models;
 
 public class Movie {
 
+	
 	String movieId;
 	String name;
 	String description;
 	
+	
+	public Movie() {
+		super();
+		
+	}
 	
 	public Movie(String movieId, String name, String description) {
 		super();
