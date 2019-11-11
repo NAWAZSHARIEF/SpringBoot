@@ -16,6 +16,8 @@ public class MovieCatalogResource {
 	@RequestMapping("/{userId}")	
 	private List<CatalogItem> getCatalog(@PathVariable String userId){
 		
+		
+		
 		return Collections.singletonList(
 				new CatalogItem("Transformers", "TransTest", 5)
 				);
