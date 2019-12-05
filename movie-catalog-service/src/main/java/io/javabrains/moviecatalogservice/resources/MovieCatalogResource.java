@@ -1,6 +1,5 @@
 package io.javabrains.moviecatalogservice.resources;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,13 +29,13 @@ public class MovieCatalogResource {
 		
 	
 		
-		UserRatings userRating = restTemplate.getForObject("http://localhost:8083/ratingsData/users/"+userId,UserRatings.class);
+		UserRatings userRating = restTemplate.getForObject("http://ratings-data-service/ratingsData/users/"+userId,UserRatings.class);
 		List<Rating> ratings = userRating.getRatings();
 		
 	    List<CatalogItem> catlogs = 
 				     
 				     ratings.stream().map(rating -> {
-				     Movie movie =  restTemplate.getForObject("http://localhost:8082/movies/"+rating.getMovieId(),Movie.class);
+				     Movie movie =  restTemplate.getForObject("http://movie-info-service/movies/"+rating.getMovieId(),Movie.class);
 				     return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating());
 				     })
 		            .collect(Collectors.toList());
