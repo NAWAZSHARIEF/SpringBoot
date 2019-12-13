@@ -38,6 +38,7 @@ public class MovieResource {
 		SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
 		Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("192.168.55.218", 8080));
 		clientHttpRequestFactory.setProxy(proxy);
+		clientHttpRequestFactory.setConnectTimeout(3000);
 		
 		restTemplate = new RestTemplate(clientHttpRequestFactory);
 		
