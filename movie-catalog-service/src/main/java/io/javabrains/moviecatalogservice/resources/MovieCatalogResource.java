@@ -1,5 +1,6 @@
 package io.javabrains.moviecatalogservice.resources;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 import io.javabrains.moviecatalogservice.models.CatalogItem;
 import io.javabrains.moviecatalogservice.models.MovieExt;
@@ -24,8 +27,9 @@ public class MovieCatalogResource {
 	/*@Autowired
 	private WebClient.Builder builder;*/
 	
-	@RequestMapping("/{userId}")	
-	private List<CatalogItem> getCatalog(@PathVariable String userId){
+	@RequestMapping("/{userId}")
+	@HystrixCommand(fallbackMethod="getFallbackCatalog")
+	public List<CatalogItem> getCatalog(@PathVariable String userId){
 		
 	
 		
@@ -72,5 +76,10 @@ public class MovieCatalogResource {
 		
 		
 	} 
+	
+	public List<CatalogItem> getFallbackCatalog(@PathVariable String userId){
+		
+		return Arrays.asList(new CatalogItem("NoMovie", "Fallback", 0));
+	}
 	
 }
