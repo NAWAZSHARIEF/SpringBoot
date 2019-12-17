@@ -1,6 +1,5 @@
 package io.javabrains.moviecatalogservice.resources;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,49 +9,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-
 import io.javabrains.moviecatalogservice.models.CatalogItem;
 import io.javabrains.moviecatalogservice.models.MovieExt;
 import io.javabrains.moviecatalogservice.models.Rating;
 import io.javabrains.moviecatalogservice.models.UserRatings;
+import io.javabrains.moviecatalogservice.service.MovieInfoService;
+import io.javabrains.moviecatalogservice.service.UserRatingService;
 
 @RestController
 @RequestMapping("/catalog")
-public class MovieCatalogResource {
+public class MovieCatalogResource {                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	
+	@Autowired
+	private MovieInfoService movieInfoService;
+	
+	@Autowired
+	private UserRatingService userRatingService;
 	
 	/*@Autowired
 	private WebClient.Builder builder;*/
 	
 	@RequestMapping("/{userId}")
-	@HystrixCommand(fallbackMethod="getFallbackCatalog")
 	public List<CatalogItem> getCatalog(@PathVariable String userId){
 		
-	
-		
-		UserRatings userRating = restTemplate.getForObject("http://ratings-data-service/ratingsData/users/"+userId,UserRatings.class);
+		UserRatings userRating = userRatingService.getUserRating(userId);
 		List<Rating> ratings = userRating.getRatings();
-		
-	    /*List<CatalogItem> catlogs = 
-				     
-				     ratings.stream().map(rating -> {
-				     Movie movie =  restTemplate.getForObject("http://movie-info-service/movies/"+rating.getMovieId(),Movie.class);
-				     return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating());
-				     })
-		            .collect(Collectors.toList());*/
-		
-		
-		 MovieExt movie2 =  restTemplate.getForObject("http://movie-info-service/movies/ext/"+100,MovieExt.class);
-		 System.out.println(movie2);
 	    List<CatalogItem> catlogs =			     
 			     ratings.stream().map(rating -> {
-			     MovieExt movie =  restTemplate.getForObject("http://movie-info-service/movies/ext/"+rating.getMovieId(),MovieExt.class);
+			     MovieExt movie =  movieInfoService.getMovieInfo(rating);
 			     return new CatalogItem(movie.getTitle(), movie.getTagline(), rating.getRating(),movie.getImdb_id());
 			     })
 	            .collect(Collectors.toList());
+	    
+	    /*List<CatalogItem> catlogs = 
+	     
+	     ratings.stream().map(rating -> {
+	     Movie movie =  restTemplate.getForObject("http://movie-info-service/movies/"+rating.getMovieId(),Movie.class);
+	     return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating());
+	     })
+       .collect(Collectors.toList());*/
+
 	    
 		/*
 		 * Using Asynchronous call , Spring Reactive, WebClient
@@ -76,10 +76,7 @@ public class MovieCatalogResource {
 		
 		
 	} 
+
 	
-	public List<CatalogItem> getFallbackCatalog(@PathVariable String userId){
-		
-		return Arrays.asList(new CatalogItem("NoMovie", "Fallback", 0));
-	}
-	
+
 }

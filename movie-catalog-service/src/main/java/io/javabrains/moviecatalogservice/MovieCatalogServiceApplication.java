@@ -22,9 +22,10 @@ public class MovieCatalogServiceApplication {
 	@Bean
 	@LoadBalanced
 	public RestTemplate getTemplate() {
-		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory =new HttpComponentsClientHttpRequestFactory();
+		/*HttpComponentsClientHttpRequestFactory clientHttpRequestFactory =new HttpComponentsClientHttpRequestFactory();
 		clientHttpRequestFactory.setConnectTimeout(3000);
-		return new RestTemplate(clientHttpRequestFactory);
+		return new RestTemplate(clientHttpRequestFactory);*/
+		return new RestTemplate();
 	}
 	
 	/*@Bean

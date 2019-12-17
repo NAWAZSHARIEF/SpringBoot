@@ -8,6 +8,20 @@ public class MovieExt {
 	String tagline;
 	String status;
 	
+	public MovieExt() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+	
+	public MovieExt(String id, String imdb_id, String title, String tagline, String status) {
+		super();
+		this.id = id;
+		this.imdb_id = imdb_id;
+		this.title = title;
+		this.tagline = tagline;
+		this.status = status;
+	}
 	public String getId() {
 		return id;
 	}

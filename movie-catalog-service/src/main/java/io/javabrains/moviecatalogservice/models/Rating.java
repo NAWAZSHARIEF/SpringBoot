@@ -10,6 +10,11 @@ public class Rating {
 		
 	}
 	
+	public Rating(String movieId, Integer rating) {
+		super();
+		this.movieId = movieId;
+		this.rating = rating;
+	}
 	
 	public String getMovieId() {
 		return movieId;
